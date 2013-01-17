@@ -191,6 +191,26 @@ function handle_json_rpc($object) {
         $msg = "доступные команды: " . implode(", ", array_slice($methods, 0, -1)) . " и " .  $methods[count($methods)-1] . ".";
         echo response($msg, $id, null);
       }
+    } else if (trim($method) == 'tab') {
+      $methods = array_merge($methods, array('help', 'clear'));
+      if (count($params) == 1) {
+        $srch = $params[0];
+        $retAr = array();
+        foreach ($methods as $m) {
+          if (substr($m, 0, strlen($srch)) == $srch) {
+            $retAr[] = $m;
+          }
+        }
+
+        if (count($retAr) == 1) {
+          echo response($retAr[0], $id, null);
+        } else {
+          echo response(null, $id, array("code"=>-32605, "message"=>implode('  ', $retAr)));
+        }
+      } else {
+        echo response('', $id, null);
+      }
+
     } else if (!in_array($method, $methods)) {
       $msg = 'Команды ' . $method . ' не найдено';
       echo response(null, $id, array("code" =>-32601, "message" => $msg));

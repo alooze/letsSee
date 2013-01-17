@@ -42,15 +42,18 @@ class LetsSee {
     } else {
       throw new Exception("Wrong Password");
     }*/
+    global $modx;
+    $did = $modx->documentIdentifier;
+
     if ($what == '') {
       //return $this->show_documentation;     
       return  $this->showHelp('show');
     }
 
-    if (!isset($_SESSION['ls_plugin_data'])) {
+    if (!isset($_SESSION['ls_plugin_data'][$did])) {
       throw new Exception("Не удалось передать данные в консоль");
     } else {
-      $toShow = $_SESSION['ls_plugin_data'];
+      $toShow = $_SESSION['ls_plugin_data'][$did];
       switch ($what) {
         case 'g':
         case 'get':
@@ -109,6 +112,8 @@ class LetsSee {
                  "ваш IP" => $_SERVER['REMOTE_ADDR'],
                  "вы перешли по ссылке с адреса" => $_SERVER["HTTP_REFERER"]);
   }
+
+  
 }
 
 handle_json_rpc(new LetsSee());
